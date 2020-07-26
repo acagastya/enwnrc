@@ -21,7 +21,7 @@ eventSource.onerror = function(event) {
 
 eventSource.onmessage = function(event) {
   const change = JSON.parse(event.data);
-  let msg;
+  let msg = "";
   if (change.wiki === wiki) {
     const {
       bot,
@@ -38,32 +38,52 @@ eventSource.onmessage = function(event) {
       type,
       user
     } = change;
-    if (type == "edit") {
-      const uri = `${server_url}${server_script_path}/index.php?diff=${revision["new"]}&oldid=${revision.old}`;
-      const size = length["new"] - length["old"];
-      const sign = size >= 0 ? "+" : "";
-      msg = `[[${title}]] `;
-      if (minor) msg += "M";
-      if (bot) msg += "B";
-      msg += ` ${uri} * ${user} * (${sign}${size})`;
-      if (comment) msg += ` ${comment}`;
-    } else if (type == "new") {
-      const uri = `${server_url}${server_script_path}/index.php?oldid=${revision["new"]}&rcid=${id}`;
-      const size = length["new"];
-      msg = `[[${title}]] ${
-        !patrolled ? "!" : ""
-      }N ${uri} * ${user} * (+${size})`;
-      if (comment) msg += ` ${comment}`;
-    } else if (type == "log") {
-      msg = `[[Special:Log/${change.log_type}]] ${change.log_action} `;
-      if (bot) msg += "B";
-      msg += ` * ${user} * `;
-      if (log_action_comment != "New user account")
-        msg += ` ${
-          log_action == "delete" ? "deleted" : log_action
-        }  [[${title}]]`;
-      else if (comment) msg += `: ${comment}`;
-    } else msg = JSON.stringify(change);
-    ircClient.say(channel, msg);
+    try {
+      // edit action
+      if (type == "edit") {
+        const uri = `${server_url}${server_script_path}/index.php?diff=${revision["new"]}&oldid=${revision.old}`;
+        const size = length["new"] - length["old"];
+        const sign = size >= 0 ? "+" : "";
+        msg = `[[${title}]] `;
+        if (minor) msg += "M";
+        if (bot) msg += "B";
+        msg += ` ${uri} * ${user} * (${sign}${size})`;
+        if (comment) msg += ` ${comment}`;
+      }
+      // new page created action
+      else if (type == "new") {
+        const uri = `${server_url}${server_script_path}/index.php?oldid=${revision["new"]}&rcid=${id}`;
+        const size = length["new"];
+        msg = `[[${title}]] ${
+          !patrolled ? "!" : ""
+        }N ${uri} * ${user} * (+${size})`;
+        if (comment) msg += ` ${comment}`;
+      }
+      // log actions
+      else if (type == "log") {
+        const { log_action, log_type } = change;
+        // review log
+        if (change.log_type == "review") {
+          msg = `[[Special:Log/review]] ${log_action}`;
+          if (bot) msg += "B";
+          msg += `  * ${user} *  ${log_action_comment}`;
+        }
+        // delete log
+        else if (log_type == "delete") {
+          msg = `[[Special:Log/delete]] ${log_action}`;
+          if (bot) msg += "B";
+          msg += `  * ${user} *  ${
+            log_action == "delete" ? "deleted" : "DID SOMETHING ELSE"
+          } "[[${title}]]"`;
+          if (comment) msg += " " + comment;
+        }
+        // new account log
+      }
+      ircClient.say(channel, msg);
+    } catch (error) {
+      msg = JSON.stringify(change);
+      msg += "\n--- error";
+      ircClient.say("acagastya", msg);
+    }
   }
 };
