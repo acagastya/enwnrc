@@ -78,8 +78,12 @@ eventSource.onmessage = function(event) {
           if (comment) msg += " " + comment;
         }
         // new account log
+        // to implement
+        // other log actions
         else ircClient.say("acagastya", JSON.stringify(change));
-      } else ircClient.say("acagastya", JSON.stringify(change));
+      }
+      // other actions
+      else ircClient.say("acagastya", JSON.stringify(change));
       ircClient.say(channel, msg);
     } catch (error) {
       msg = JSON.stringify(change);
