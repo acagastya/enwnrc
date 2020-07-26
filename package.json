@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "eventsource": "^1.0.7",
+    "irc": "^0.5.2"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
