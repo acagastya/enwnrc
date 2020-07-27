@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "eventsource": "^1.0.7",
-    "irc": "^0.5.2"
+    "irc": "^0.5.2",
+    "irc-colors": "^1.5.0"
   },
   "scripts": {
     "start": "node index.js"
