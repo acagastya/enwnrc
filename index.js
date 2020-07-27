@@ -17,8 +17,13 @@ eventSource.onopen = function(event) {
 };
 
 eventSource.onerror = function(event) {
-  ircClient.say("acagastya", JSON.stringify(event) + "\n --- error");
-  console.error("--- Encountered error", event);
+  const knownError = { type: "error" };
+  const knownErrStr = JSON.stringify(knownError);
+  const eventStr = JSON.stringify(event);
+  if (eventStr != knownErrStr) {
+    ircClient.say("acagastya", eventStr + "\n --- error");
+    console.error("--- Encountered error", event);
+  }
 };
 
 eventSource.onmessage = function(event) {
@@ -53,6 +58,9 @@ eventSource.onmessage = function(event) {
           "*"
         )} (${sign}${size})`;
         if (comment) msg += ` ${c.teal(comment)}`;
+      }
+      // categorize action -- leave empty
+      else if (type == "categorize") {
       }
       // new page created action
       else if (type == "new") {
@@ -102,7 +110,7 @@ eventSource.onmessage = function(event) {
           )}`;
         }
         // thank
-        else if (log_type == "thank") {
+        else if (log_type == "thanks") {
           msg = `[[${c.olive("Special:Log/thanks")}]] ${c.red(
             log_action
           )}  ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
