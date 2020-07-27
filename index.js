@@ -68,7 +68,7 @@ eventSource.onmessage = function(event) {
         const size = length["new"];
         msg = `[[${c.olive(title)}]] ${
           !patrolled ? c.red("!") : ""
-        }c.red("N") ${c.navy(uri)} ${c.maroon("*")} ${c.green(user)} ${c.maroon(
+        }${c.red("N")} ${c.navy(uri)} ${c.maroon("*")} ${c.green(user)} ${c.maroon(
           "*"
         )} (+${size})`;
         if (comment) msg += ` ${c.teal(comment)}`;
