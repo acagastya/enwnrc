@@ -89,9 +89,12 @@ eventSource.onmessage = function(event) {
           msg = `[[${c.olive("Special:Log/delete")}]] ${c.red(log_action)} `;
           if (bot) msg += c.red("B");
           msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${
-            log_action == "delete" ? c.teal("deleted") : "DID SOMETHING ELSE"
+            log_action == "delete"
+              ? c.teal("deleted")
+              : c.teal("changed visibility of a revision on page")
           } "[[${c.blue(title)}]]"`;
           if (comment) msg += " " + c.teal(comment);
+          ircClient.say("acagastya", change);
         }
         // new account log
         else if (log_type == "newusers") {
