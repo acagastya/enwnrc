@@ -66,9 +66,9 @@ eventSource.onmessage = function(event) {
       else if (type == "new") {
         const uri = `${server_url}${server_script_path}/index.php?oldid=${revision["new"]}&rcid=${id}`;
         const size = length["new"];
-        msg = `[[${c.olive(title)}]] ${
-          !patrolled ? c.red("!") : ""
-        }${c.red("N")} ${c.navy(uri)} ${c.maroon("*")} ${c.green(user)} ${c.maroon(
+        msg = `[[${c.olive(title)}]] ${!patrolled ? c.red("!") : ""}${c.red(
+          "N"
+        )} ${c.navy(uri)} ${c.maroon("*")} ${c.green(user)} ${c.maroon(
           "*"
         )} (+${size})`;
         if (comment) msg += ` ${c.teal(comment)}`;
@@ -94,7 +94,7 @@ eventSource.onmessage = function(event) {
               : c.teal("changed visibility of a revision on page")
           } "[[${c.blue(title)}]]"`;
           if (comment) msg += " " + c.teal(comment);
-          ircClient.say("acagastya", change);
+          ircClient.say("acagastya", JSON.stringify(change));
         }
         // new account log
         else if (log_type == "newusers") {
