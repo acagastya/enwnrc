@@ -16,13 +16,14 @@ eventSource.onopen = function(event) {
 };
 
 eventSource.onerror = function(event) {
+  ircClient.say("acagastya", JSON.stringify(event) + "\n --- error");
   console.error("--- Encountered error", event);
 };
 
 eventSource.onmessage = function(event) {
   const change = JSON.parse(event.data);
   let msg = "";
-  if (change.wiki === wiki) {
+  if (change.wiki == wiki) {
     const {
       bot,
       comment,
@@ -64,21 +65,31 @@ eventSource.onmessage = function(event) {
         const { log_action, log_type } = change;
         // review log
         if (change.log_type == "review") {
-          msg = `[[Special:Log/review]] ${log_action}`;
+          msg = `[[Special:Log/review]] ${log_action} `;
           if (bot) msg += "B";
-          msg += `  * ${user} *  ${log_action_comment}`;
+          msg += ` * ${user} *  ${log_action_comment}`;
         }
         // delete log
         else if (log_type == "delete") {
-          msg = `[[Special:Log/delete]] ${log_action}`;
+          msg = `[[Special:Log/delete]] ${log_action} `;
           if (bot) msg += "B";
-          msg += `  * ${user} *  ${
+          msg += ` * ${user} *  ${
             log_action == "delete" ? "deleted" : "DID SOMETHING ELSE"
           } "[[${title}]]"`;
           if (comment) msg += " " + comment;
         }
         // new account log
-        // to implement
+        else if (log_type == "newuser") {
+          msg = `[[Special:Log/newusers]] `;
+          if (bot) msg += "B";
+          msg += ` ${log_action}  * ${user} *  ${log_action_comment}`;
+        }
+        // block
+        else if (log_type == "block") {
+          msg = `[[Special:Log/block]] ${log_action} `;
+          if (bot) msg += "B";
+          msg += ` * ${user} *  ${log_action_comment}`;
+        }
         // other log actions
         else ircClient.say("acagastya", JSON.stringify(change));
       }
