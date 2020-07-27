@@ -86,7 +86,7 @@ eventSource.onmessage = function(event) {
           if (comment) msg += " " + c.teal(comment);
         }
         // new account log
-        else if (log_type == "newuser") {
+        else if (log_type == "newusers") {
           msg = `[[${c.olive("Special:Log/newusers")}]] `;
           if (bot) msg += c.red("B");
           msg += ` ${c.red(log_action)}  ${c.maroon("*")} ${c.green(
