@@ -5,23 +5,23 @@ const c = require("irc-colors");
 const { API, botName, channel, server, wiki } = require("./config");
 
 const ircClient = new irc.Client(server, botName, { channels: [channel] });
-ircClient.addListener("error", function (message) {
+ircClient.addListener("error", function(message) {
   console.log("error: ", message);
 });
 
 console.log("Connecting to the event stream...");
 const eventSource = new ES(API);
 
-eventSource.onopen = function (event) {
+eventSource.onopen = function(event) {
   console.log("--- Opened connection.");
 };
 
-eventSource.onerror = function (event) {
+eventSource.onerror = function(event) {
   ircClient.say("acagastya", JSON.stringify(event) + "\n --- error");
   console.error("--- Encountered error", event);
 };
 
-eventSource.onmessage = function (event) {
+eventSource.onmessage = function(event) {
   const change = JSON.parse(event.data);
   let msg = "";
   if (change.wiki == wiki) {
@@ -60,9 +60,9 @@ eventSource.onmessage = function (event) {
         const size = length["new"];
         msg = `[[${c.olive(title)}]] ${
           !patrolled ? c.red("!") : ""
-          }c.red("N") ${c.navy(uri)} ${c.maroon("*")} ${c.green(user)} ${c.maroon(
-            "*"
-          )} (+${size})`;
+        }c.red("N") ${c.navy(uri)} ${c.maroon("*")} ${c.green(user)} ${c.maroon(
+          "*"
+        )} (+${size})`;
         if (comment) msg += ` ${c.teal(comment)}`;
       }
       // log actions
@@ -82,7 +82,7 @@ eventSource.onmessage = function (event) {
           if (bot) msg += c.red("B");
           msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${
             log_action == "delete" ? c.teal("deleted") : "DID SOMETHING ELSE"
-            } "[[${c.blue(title)}]]"`;
+          } "[[${c.blue(title)}]]"`;
           if (comment) msg += " " + c.teal(comment);
         }
         // new account log
@@ -108,6 +108,21 @@ eventSource.onmessage = function (event) {
           )}  ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
             log_action_comment
           )}`;
+        }
+        // rename
+        else if (log_type == "renameuser") {
+          msg = `[[${c.olive("Special:Log/renameuser")}]] ${c.red(
+            log_action
+          )}  ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
+            log_action_comment
+          )}`;
+        }
+        // move
+        else if (log_type == "move") {
+          msg = `[[${c.olive("Special:Log/move")}]] ${c.red(
+            log_action
+          )}  ${c.maroon("*")}  ${c.green(user)} ${c.maroon("*")}  `;
+          if (comment) msg += c.teal(log_action_comment);
         }
         // other log actions
         else ircClient.say("acagastya", JSON.stringify(change));
