@@ -147,7 +147,15 @@ eventSource.onmessage = function(event) {
           msg = `[[${c.olive("Special:Log/rights")}]] ${c.red(log_action)} `;
           if (bot) msg += c.red("B");
           msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment
+            log_action_comment.replace(/&quot;/g, '"')
+          )}`;
+        }
+        // protection
+        else if (log_type == "protect") {
+          msg = `[[${c.olive("Special:Log/protect")}]] ${c.red(log_action)} `;
+          if (bot) msg += c.red("B");
+          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
+            log_action_comment.replace(/&quot;/g, '"')
           )}`;
         }
         // other log actions
