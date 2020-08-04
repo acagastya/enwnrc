@@ -111,9 +111,9 @@ eventSource.onmessage = function(event) {
         }
         // thank
         else if (log_type == "thanks") {
-          msg = `[[${c.olive("Special:Log/thanks")}]] ${c.red(
-            log_action
-          )}  ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
+          msg = `[[${c.olive("Special:Log/thanks")}]] ${c.red(log_action)} `;
+          if (bot) msg += c.red("B");
+          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
             log_action_comment
           )}`;
         }
@@ -121,23 +121,33 @@ eventSource.onmessage = function(event) {
         else if (log_type == "renameuser") {
           msg = `[[${c.olive("Special:Log/renameuser")}]] ${c.red(
             log_action
-          )}  ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
+          )} `;
+          if (bot) msg += c.red("B");
+          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
             log_action_comment
           )}`;
         }
         // move
         else if (log_type == "move") {
-          msg = `[[${c.olive("Special:Log/move")}]] ${c.red(
-            log_action
-          )}  ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  `;
+          msg = `[[${c.olive("Special:Log/move")}]] ${c.red(log_action)} `;
+          if (bot) msg += c.red("B");
+          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  `;
           if (comment) msg += c.teal(log_action_comment);
         }
         // upload
         else if (log_type == "upload") {
-          msg = `[[${c.olive("Special:Log/upload")}]] ${c.red(
-            log_action
-          )}  ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
+          msg = `[[${c.olive("Special:Log/upload")}]] ${c.red(log_action)} `;
+          if (bot) msg += c.red("B");
+          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
             log_action_comment.replace(/&quot;/g, '"')
+          )}`;
+        }
+        // user rights
+        else if (log_type == "rights") {
+          msg = `[[${c.olive("Special:Log/rights")}]] ${c.red(log_action)} `;
+          if (bot) msg += c.red("B");
+          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
+            log_action_comment
           )}`;
         }
         // other log actions
