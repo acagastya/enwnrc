@@ -76,93 +76,14 @@ eventSource.onmessage = function(event) {
       // log actions
       else if (type == "log") {
         const { log_action, log_type } = change;
-        // review log
-        if (change.log_type == "review") {
-          msg = `[[${c.olive("Special:Log/review")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment
-          )}`;
-        }
-        // delete log
-        else if (log_type == "delete") {
-          msg = `[[${c.olive("Special:Log/delete")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment.replace(/&quot;/g, '"')
-          )}`;
-          ircClient.say("acagastya", JSON.stringify(change));
-        }
-        // new account log
-        else if (log_type == "newusers") {
-          msg = `[[${c.olive("Special:Log/newusers")}]] `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.red(log_action)}  ${c.maroon("*")} ${c.green(
-            user
-          )} ${c.maroon("*")}  ${c.teal(log_action_comment)}`;
-        }
-        // block
-        else if (log_type == "block") {
-          msg = `[[${c.olive("Special:Log/block")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment
-          )}`;
-        }
-        // thank
-        else if (log_type == "thanks") {
-          msg = `[[${c.olive("Special:Log/thanks")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment
-          )}`;
-        }
-        // rename
-        else if (log_type == "renameuser") {
-          msg = `[[${c.olive("Special:Log/renameuser")}]] ${c.red(
-            log_action
-          )} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment
-          )}`;
-        }
-        // move
-        else if (log_type == "move") {
-          msg = `[[${c.olive("Special:Log/move")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  `;
-          if (comment) msg += c.teal(log_action_comment);
-        }
-        // upload
-        else if (log_type == "upload") {
-          msg = `[[${c.olive("Special:Log/upload")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment.replace(/&quot;/g, '"')
-          )}`;
-        }
-        // user rights
-        else if (log_type == "rights") {
-          msg = `[[${c.olive("Special:Log/rights")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment.replace(/&quot;/g, '"')
-          )}`;
-        }
-        // protection
-        else if (log_type == "protect") {
-          msg = `[[${c.olive("Special:Log/protect")}]] ${c.red(log_action)} `;
-          if (bot) msg += c.red("B");
-          msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  ${c.teal(
-            log_action_comment.replace(/&quot;/g, '"')
-          )}`;
-        }
-        // other log actions
-        else ircClient.say("acagastya", JSON.stringify(change));
+        msg = `[[${c.olive("Special:Log/")}${c.olive(log_type)}]] ${c.red(
+          log_action
+        )} `;
+        if (bot) msg += c.red("B");
+        msg += ` ${c.maroon("*")} ${c.green(user)} ${c.maroon("*")}  `;
+        if (comment)
+          msg += `${c.teal(log_action_comment.replace(/&quot;/g, '"'))}`;
       }
-      // other actions
-      else ircClient.say("acagastya", JSON.stringify(change));
       ircClient.say(channel, msg);
     } catch (error) {
       msg = JSON.stringify(change);
